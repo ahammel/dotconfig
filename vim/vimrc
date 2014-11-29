@@ -1,0 +1,114 @@
+""" Alex's .vimrc for asimov
+" Last updated Nov 29, 2014
+"
+
+""" Basics
+set nocompatible    " Unset vi compatibility
+set background=dark " Dark background
+syntax on           " Syntax highlighting
+set showcmd         " Echo pending commands to the bottome of the screen
+set autochdir       " Directories open relative to buffer
+set showmatch       " Highlighting matching delimiters
+set number          " Line numbers
+let mapleader = "," " Comma for leader key
+set hlsearch        " Search highlighting
+set incsearch       " Incremental searching
+set hidden          " Allow backgrounded changed buffers
+set autoread        " Auto-reload changed files
+
+""" Pathogen
+execute pathogen#infect()
+filetype plugin indent on
+
+""" 4-space autotabs
+set smartindent
+set tabstop=8
+set shiftwidth=4
+set expandtab
+
+""" Statusline configuration
+set laststatus=2       " Turn it on
+set statusline=%t      " Tail of filename
+set statusline+=%m     " Modified flag
+set statusline+=%=     " Left/right separator
+set statusline+=%c,    " Cursor column
+set statusline+=%l/%L  " Cursor line / total lines
+
+""" Backups
+set backup
+set backupdir=~/.vim/backup
+
+""" Plugin configuration
+"" Unite
+let g:unite_source_history_yank_enable = 1
+nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async<CR>
+nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
+nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
+nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
+
+"" Synatastic
+let $PATH .= ':/home/alex/.cabal/bin' " <- path weirdness
+let g:syntastic_auto_loc_list=1
+let g:syntastic_haskell_checkers = ['ghc_mod', 'hdevtools']
+
+""" Filetype-specific settings
+"" Makefiles
+" Proper tabs
+autocmd FileType make setlocal noexpandtab
+
+""" Keybindings
+" C-h clears highlighting
+nnoremap <C-h> :nohl<return>
+
+" C-j inserts newline (thanks, brief Emacs experiment!)
+inoremap <C-j> <CR>
+
+" F2 to toggle paste mode
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+
+" F4 strips trailing whitespace
+nnoremap <silent> <F4> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+" F5 inserts current date
+nnoremap <F5> "=strftime("%b %d, %Y")<CR>p
+inoremap <F5> <C-R>=strftime("%b %d, %Y")<CR>
+
+" Once sentence per line in the current paragraph
+nnoremap <F6> vip:s/\.  \+/.\r/g<CR>vip:s/\([^\.]\)\n/\1 /g<CR>
+
+""" Misc hacks.
+"" New files open with template
+autocmd! BufNewFile * silent! 0r ~/.vim/skel/tmpl.%:e
+
+"" Autoreload vimrc file
+"  Note that the arg is 'vimrc', not '.vimrc' because of symlinking.
+autocmd! BufWritePost vimrc source $MYVIMRC
+
+"" Regex-based alignment (thanks again, Emacs!)
+command! -nargs=? -range Align <line1>,<line2>call AlignSection('<args>')
+vnoremap <silent> <Leader>a :Align<CR>
+function! AlignSection(regex) range
+  let extra = 1
+  let sep = empty(a:regex) ? '=' : a:regex
+  let maxpos = 0
+  let section = getline(a:firstline, a:lastline)
+  for line in section
+    let pos = match(line, ' *'.sep)
+    if maxpos < pos
+      let maxpos = pos
+    endif
+  endfor
+  call map(section, 'AlignLine(v:val, sep, maxpos, extra)')
+  call setline(a:firstline, section)
+endfunction
+
+function! AlignLine(line, sep, maxpos, extra)
+  let m = matchlist(a:line, '\(.\{-}\) \{-}\('.a:sep.'.*\)')
+  if empty(m)
+    return a:line
+  endif
+  let spaces = repeat(' ', a:maxpos - strlen(m[1]) + a:extra)
+  return m[1] . spaces . m[2]
+endfunction

@@ -1,0 +1,7 @@
+set guioptions=a  " Turns off menu bars or something?
+set guifont=Hasklig\ Medium\ 12
+set guicursor=a:blinkon0
+colorscheme solarized
+
+""" Auto-reload
+autocmd! BufWritePost gvimrc source ~/.gvimrc
