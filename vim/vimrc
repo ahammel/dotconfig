@@ -48,10 +48,15 @@ nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
 
 "" Synatastic
 let $PATH .= ':/home/alex/.cabal/bin' " <- path weirdness
-let g:syntastic_auto_loc_list=1
+let g:syntastic_auto_loc_list=0
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hdevtools']
 
 """ Filetype-specific settings
+"" Haskell
+au FileType haskell nnoremap <buffer> <F10> :HdevtoolsType<CR>
+au FileType haskell nnoremap <buffer> <silent> <F11> :HdevtoolsClear<CR>
+au FileType haskell nnoremap <buffer> <silent> <F12> :HdevtoolsInfo<CR>
+
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
@@ -85,6 +90,9 @@ autocmd! BufNewFile * silent! 0r ~/.vim/skel/tmpl.%:e
 "" Autoreload vimrc file
 "  Note that the arg is 'vimrc', not '.vimrc' because of symlinking.
 autocmd! BufWritePost vimrc source $MYVIMRC
+
+"" :w!! sudo writes
+cmap w!! w !sudo tee > /dev/null %
 
 "" Regex-based alignment (thanks again, Emacs!)
 command! -nargs=? -range Align <line1>,<line2>call AlignSection('<args>')
