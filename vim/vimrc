@@ -13,8 +13,12 @@ set number          " Line numbers
 let mapleader = "," " Comma for leader key
 set hlsearch        " Search highlighting
 set incsearch       " Incremental searching
+set smartcase       " Decent case handling
 set hidden          " Allow backgrounded changed buffers
 set autoread        " Auto-reload changed files
+set foldcolumn=3    " Display fold level
+set spelllang=en_ca " Canadian spelling
+set encoding=utf-8  " Unicode
 
 """ Pathogen
 execute pathogen#infect()
