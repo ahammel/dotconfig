@@ -5,6 +5,7 @@ syntax on           " Syntax highlighting
 set showcmd         " Echo pending commands to the bottome of the screen
 set autochdir       " Directories open relative to buffer
 set showmatch       " Highlighting matching delimiters
+set cursorline      " Highlight current line
 set number          " Line numbers
 let mapleader = "," " Comma for leader key
 set hlsearch        " Search highlighting
