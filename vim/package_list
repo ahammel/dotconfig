@@ -11,5 +11,6 @@ vim-multiple-cursors https://github.com/terryma/vim-multiple-cursors
 neomru               https://github.com/Shougo/neomru.vim
 syntastic            https://github.com/scrooloose/syntastic
 haskell-vim          https://github.com/raichoo/haskell-vim
+ghcmod-vim           https://github.com/eagletmt/ghcmod-vim
 neocomplete          https://github.com/Shougo/neocomplete.vim
 neoghc               https://github.com/eagletmt/neco-ghc

@@ -70,9 +70,9 @@ let g:syntastic_haskell_checkers = ['ghc_mod', 'hdevtools']
 
 """ Filetype-specific settings
 "" Haskell
-au FileType haskell nnoremap <buffer> <F10> :HdevtoolsType<CR>
-au FileType haskell nnoremap <buffer> <silent> <F11> :HdevtoolsClear<CR>
-au FileType haskell nnoremap <buffer> <silent> <F12> :HdevtoolsInfo<CR>
+au FileType haskell nnoremap <buffer> <F10> :GhcModType<CR>
+au FileType haskell nnoremap <buffer> <silent> <F11> :GhcModTypeClear<CR>
+au FileType haskell nnoremap <buffer> <silent> <F12> :GhcModInfo<CR>
 " insert type signature
 nnoremap <Leader>s :.!typeOf %<CR>
 
