@@ -2,9 +2,6 @@
 "
 " Aggressively chopped from the default Haskell syntax file.
 "
-" TODO:
-"   Make Haddock comments distinct
-"
 if version < 600
   syn clear
 elseif exists("b:current_syntax")
@@ -26,6 +23,7 @@ syn match   hsCharacter     "^'\([^\\]\|\\[^']\+\|\\'\)'" contains=hsSpecialChar
 " Comments
 syn keyword hsTodo             TODO FIXME XXX contained
 syn match   hsLineComment      "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=hsTodo
+syn match   hsHaddockComment    "^-- |.*\n\(--.*\n\)*" contains = hsTodo
 syn region  hsBlockComment     start="{-"  end="-}" contains=hsBlockComment,hsTodo
 syn region  hsPragma           start="{-#" end="#-}"
 
@@ -36,6 +34,7 @@ hi! def link hsString             Constant
 hi! def link hsCharacter          Character
 hi! def link hsSpecialChar        SpecialChar
 hi! def link hsSpecialCharError   Error
+hi! def link hsHaddockComment     Label
 hi! def link hsBlockComment       Comment
 hi! def link hsLineComment        Comment
 hi! def link hsComment            Comment
