@@ -3,18 +3,15 @@
 " Aggressively chopped from the default Haskell syntax file.
 "
 " TODO:
-"   Add TODO highlighting
-"   Figure out what's going on with string highlighting
 "   Make Haddock comments distinct
+"
 if version < 600
   syn clear
 elseif exists("b:current_syntax")
   finish
 endif
 
-" Infix operators--most punctuation characters and any (qualified) identifier
-" enclosed in `backquotes`. An operator starting with : is a constructor,
-" others are variables (e.g. functions).
+" Backticked infix operators
 syn match hsVarSym "`\(\<[A-Z][a-zA-Z0-9_']*\.\)\=[a-z][a-zA-Z0-9_']*`"
 syn match hsConSym "`\(\<[A-Z][a-zA-Z0-9_']*\.\)\=[A-Z][a-zA-Z0-9_']*`"
 
@@ -27,35 +24,23 @@ syn match   hsCharacter     "[^a-zA-Z0-9_']'\([^\\]\|\\[^']\+\|\\'\)'"lc=1 conta
 syn match   hsCharacter     "^'\([^\\]\|\\[^']\+\|\\'\)'" contains=hsSpecialChar,hsSpecialCharError
 
 " Comments
-syn match   hsLineComment      "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$"
-syn region  hsBlockComment     start="{-"  end="-}" contains=hsBlockComment
+syn keyword hsTodo             TODO FIXME XXX contained
+syn match   hsLineComment      "---*\([^-!#$%&\*\+./<=>\?@\\^|~].*\)\?$" contains=hsTodo
+syn region  hsBlockComment     start="{-"  end="-}" contains=hsBlockComment,hsTodo
 syn region  hsPragma           start="{-#" end="#-}"
 
 " Define the default highlighting.
-" For version 5.7 and earlier: only when not done already
-" For version 5.8 and later: only when an item doesn't have highlighting yet
-if version >= 508 || !exists("did_hs_syntax_inits")
-  if version < 508
-    let did_hs_syntax_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
-
-  HiLink hsVarSym             Operator
-  HiLink hsConSym             Operator
-  HiLink hsString             String
-  HiLink hsCharacter          Character
-  HiLink hsSpecialChar        SpecialChar
-  HiLink hsSpecialCharError   Error
-  HiLink hsBlockComment       Comment
-  HiLink hsLineComment        Comment
-  HiLink hsComment            Comment
-  HiLink hsPragma             Macro
-
-  delcommand HiLink
-endif
-
+hi! def link hsVarSym             Operator
+hi! def link hsConSym             Operator
+hi! def link hsString             Constant
+hi! def link hsCharacter          Character
+hi! def link hsSpecialChar        SpecialChar
+hi! def link hsSpecialCharError   Error
+hi! def link hsBlockComment       Comment
+hi! def link hsLineComment        Comment
+hi! def link hsComment            Comment
+hi! def link hsTodo               Todo
+hi! def link hsPragma             Macro
 
 if has('conceal')
     syntax match hsNiceOperator "\\\ze[[:alpha:][:space:]_([]" conceal cchar=λ
