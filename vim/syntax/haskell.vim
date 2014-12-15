@@ -12,6 +12,12 @@ endif
 syn match hsVarSym "`\(\<[A-Z][a-zA-Z0-9_']*\.\)\=[a-z][a-zA-Z0-9_']*`"
 syn match hsConSym "`\(\<[A-Z][a-zA-Z0-9_']*\.\)\=[A-Z][a-zA-Z0-9_']*`"
 
+if has('conceal')
+    syntax match hsConcealedOperator /\s\.\s/ms=s+1,me=e-1 conceal cchar=∘
+    syntax match hsConcealedOperator "\\\ze[[:alpha:][:space:]_([]" conceal cchar=λ
+    set conceallevel=2
+endif
+
 " Strings and constants
 syn region  hsString        start=+"+  skip=+\\\\\|\\"+  end=+"+  contains=hsSpecialChar
 syn match   hsSpecialChar   contained "\\\([0-9]\+\|o[0-7]\+\|x[0-9a-fA-F]\+\|[\"\\'&\\abfnrtv]\|^[A-Z^_\[\\\]]\)"
@@ -27,9 +33,11 @@ syn match   hsHaddockComment    "^-- |.*\n\(--.*\n\)*" contains = hsTodo
 syn region  hsBlockComment     start="{-"  end="-}" contains=hsBlockComment,hsTodo
 syn region  hsPragma           start="{-#" end="#-}"
 
+
 " Define the default highlighting.
 hi! def link hsVarSym             Operator
 hi! def link hsConSym             Operator
+hi! def link hsConcealedOperator  NONE
 hi! def link hsString             Constant
 hi! def link hsCharacter          Character
 hi! def link hsSpecialChar        SpecialChar
@@ -40,10 +48,5 @@ hi! def link hsLineComment        Comment
 hi! def link hsComment            Comment
 hi! def link hsTodo               Todo
 hi! def link hsPragma             Macro
-
-if has('conceal')
-    syntax match hsNiceOperator "\\\ze[[:alpha:][:space:]_([]" conceal cchar=λ
-    set conceallevel=2
-endif
 
 let b:current_syntax = "haskell"
