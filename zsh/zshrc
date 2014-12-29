@@ -16,13 +16,15 @@ unsetopt beep notify
 setopt appendhistory
 bindkey -v
 # End of lines configured by zsh-newuser-install
+
+source ~/.profile
+
+
 autoload -U colors && colors
 export PATH=$PATH:/usr/local/go/bin:$HOME/bin:$HOME/.gem/ruby/2.0.0/bin:$HOME/.cabal/bin
 export EDITOR=vim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 export SHELL=zsh
-
-source ~/.profile
 
 stty ixany
 stty ixoff -ixon
@@ -50,24 +52,17 @@ man() {
         man "$@"
 }
 
-# source highlighting in less!
-export LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
-
 ## Aliases
 # Reload this file
 alias reload='source ~/.zshrc'
 
 # Colorize things
-alias ls='ls --color'
 alias grep='grep --color'
-alias less='less -R'
+alias less='less -G'
 alias tree='tree -C'
-alias cower='cower -c'
 
 # Convenience
 alias e=vim
-alias vc='perl /home/alex/builds/vc-calc/vc/vc.pl'
-alias py.test2='python2 -m pytest'
 alias ll='ls -l'
 
 # Climb file trees
@@ -78,9 +73,6 @@ alias ......='echo "cd ../../../../.." && cd ../../../../..'
 alias .......='echo "cd ../../../../../.." && cd ../../../../../..'
 alias ........='echo "cd ../../../../../../.." && cd ../../../../../../..'
 
-# Always update the database before running locate
-alias locate='sudo updatedb && locate'
-
 # Git
 alias gst='git status '
 alias ga='git add '
@@ -88,11 +80,3 @@ alias gb='git branch '
 alias gc='git commit'
 alias gd='git diff'
 alias gco='git checkout '
-
-# Pacman
-alias pacupg='sudo pacman --color always -Syu && echo "AUR packages:" && cower -u'
-alias pacsearch='pacman --color always -Ss'
-alias pacinstall='sudo pacman --color always -Syu'
-alias paclocal='sudo pacman --color always -U'
-alias pacrem='sudo pacman --color always -R'
-alias pacpurge='sudo pacman --color always -Rns'
