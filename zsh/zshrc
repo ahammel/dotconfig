@@ -21,7 +21,7 @@ source ~/.profile
 
 
 autoload -U colors && colors
-export PATH=$PATH:/usr/local/go/bin:$HOME/bin:$HOME/.gem/ruby/2.0.0/bin:$HOME/.cabal/bin
+export PATH=~/.cabal/bin:~/bin:$PATH
 export EDITOR=vim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 export SHELL=zsh
@@ -66,6 +66,7 @@ alias e=vim
 alias ll='ls -l'
 
 # Climb file trees
+alias ..='echo "cd .." && cd ..'
 alias ...='echo "cd ../.." && cd ../..'
 alias ....='echo "cd ../../.." && cd ../../..'
 alias .....='echo "cd ../../../.." && cd ../../../..'
@@ -74,9 +75,11 @@ alias .......='echo "cd ../../../../../.." && cd ../../../../../..'
 alias ........='echo "cd ../../../../../../.." && cd ../../../../../../..'
 
 # Git
-alias gst='git status '
-alias ga='git add '
-alias gb='git branch '
-alias gc='git commit'
-alias gd='git diff'
-alias gco='git checkout '
+alias git=/usr/local/bin/git
+alias gst='/usr/local/bin/git status '
+alias ga='/usr/local/bin/git add '
+alias gb='/usr/local/bin/git branch '
+alias gc='/usr/local/bin/git commit'
+alias gd='/usr/local/bin/git diff'
+alias gco='/usr/local/bin/git checkout '
+alias gdiff='/usr/local/bin/git diff'
