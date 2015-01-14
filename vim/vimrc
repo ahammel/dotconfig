@@ -13,6 +13,7 @@ set hlsearch         " Search highlighting
 set incsearch        " Incremental searching
 set hidden           " Allow backgrounded changed buffers
 set autoread         " Auto-reload changed files
+set foldcolumn=1     " Folding column
 set spelllang=en_ca  " Canadian spelling
 set encoding=utf-8   " Unicode
 
@@ -47,6 +48,7 @@ nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async<CR>
 nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
 nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
+nnoremap <Leader>t :Unite -no-split tag<CR>
 
 "" Neocomplete
 let g:neocomplete#enable_at_startup = 1
@@ -105,14 +107,24 @@ let g:tagbar_type_haskell = {
 au FileType haskell nnoremap <buffer> <F5> :GhcModType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F6> :GhcModTypeClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F7> :GhcModInfo<CR>
-" insert type signature
-nnoremap <Leader>s :GhcModTypeInsert<CR>
 
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
 
+"" Commit messages
+autocmd FileType gitcommit setlocal spell
+
 """ Keybindings
+" ,<Space> for toggling folds
+nnoremap <Leader><Space> za
+
+" ,s inserts type signature
+nnoremap <Leader>s :GhcModTypeInsert<CR>
+
+" ,T to find the tags file
+nnoremap <Leader>T :set tags=./tags;/<CR>
+
 " C-h clears highlighting
 nnoremap <C-h> :nohl<CR>
 inoremap <C-h> <C-o>:nohl<CR>
@@ -125,26 +137,28 @@ nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 set showmode
 
+"" F3 highlights trailing whitespace
+nnoremap <F3> :match ErrorMsg '\s\+$'<CR>
+
 " F4 strips trailing whitespace
 nnoremap <silent> <F4> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
-" F5 inserts current date
-nnoremap <F5> "=strftime("%b %d, %Y")<CR>p
-inoremap <F5> <C-R>=strftime("%b %d, %Y")<CR>
+" F5 -- F7 taken by Haskell specific functions
 
-" Once sentence per line in the current paragraph
-nnoremap <F6> vip:s/\.  \+/.\r/g<CR>vip:s/\([^\.]\)\n/\1 /g<CR>
+" F8 to fix the Macvim fullscreen bug
+nnoremap <F8> :set lines=999<CR>
 
-" Navigation
+" F9 toggles the tagbar
 nnoremap <F9> :TagbarToggle<CR>
+
+" F10 toggles spelling
+nnoremap <F10> :setlocal spell!<CR>
+inoremap <F10> <C-o>:setlocal spell!<CR>
 
 """ Misc hacks.
 "" Preserve selection after indenting
 vnoremap > ><CR>gv
 vnoremap < <<CR>gv
-
-"" Highlight trailing whitespace
-match ErrorMsg '\s\+$'
 
 "" New files open with template
 autocmd! BufNewFile * silent! 0r ~/.vim/skel/tmpl.%:e
