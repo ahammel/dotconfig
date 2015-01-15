@@ -1,5 +1,5 @@
 set guioptions=a  " Turns off menu bars or something?
-set guifont=AnonymousPro:h16
+set guifont=AnonymicePowerline:h16
 set guicursor=a:blinkon0
 colorscheme solarized
 

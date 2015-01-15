@@ -3,8 +3,8 @@ vim-commentary       https://github.com/tpope/vim-commentary
 vim-fugitive         https://github.com/tpope/vim-fugitive
 vim-surround         https://github.com/tpope/vim-surround
 vim-unimpaired       https://github.com/tpope/vim-unimpaired
-vim-colorschemes     https://github.com/flazz/vim-colorschemes
 vim-abolish          https://github.com/tpope/vim-abolish
+vim-repeat           https://github.com/tpope/vim-repeat
 vimproc              https://github.com/Shougo/vimproc.vim              make
 unite                https://github.com/Shougo/unite.vim
 unite-tag            https://github.com/tsukkee/unite-tag
@@ -17,3 +17,5 @@ syntastic            https://github.com/scrooloose/syntastic
 vim-multiple-cursors https://github.com/terryma/vim-multiple-cursors
 tagbar               https://github.com/vim-scripts/Tagbar
 ag                   https://github.com/rking/ag.vim
+vim-colorschemes     https://github.com/flazz/vim-colorschemes
+airline              https://github.com/bling/vim-airline

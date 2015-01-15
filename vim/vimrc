@@ -31,11 +31,7 @@ set expandtab
 
 """ Statusline configuration
 set laststatus=2       " Turn it on
-set statusline=%t      " Tail of filename
-set statusline+=%m     " Modified flag
-set statusline+=%=     " Left/right separator
-set statusline+=%c,    " Cursor column
-set statusline+=%l/%L  " Cursor line / total lines
+let g:airline_powerline_fonts = 1
 
 """ Backups
 set backup
@@ -52,6 +48,7 @@ nnoremap <Leader>t :Unite -no-split tag<CR>
 
 "" Neocomplete
 let g:neocomplete#enable_at_startup = 1
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<BS>"
 
 "" Neosnippet
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -140,8 +137,9 @@ set showmode
 "" F3 highlights trailing whitespace
 nnoremap <F3> :match ErrorMsg '\s\+$'<CR>
 
-" F4 strips trailing whitespace
-nnoremap <silent> <F4> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+" F4 strips trailing whitespace (clobbers the mark at 'z')
+nnoremap <silent> <F4> mz:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>`z
+vnoremap <silent> <F4> :s/\s\+$//<CR>:nohl<CR>
 
 " F5 -- F7 taken by Haskell specific functions
 
