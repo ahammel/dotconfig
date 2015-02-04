@@ -1,7 +1,6 @@
 """ Basics
 set nocompatible     " Unset vi compatibility
 syntax on            " Syntax highlighting
-set background=dark  " Against a dark background
 set showcmd          " Echo pending commands to the bottome of the screen
 set showmode
 set autochdir        " Directories open relative to buffer
