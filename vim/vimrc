@@ -2,6 +2,7 @@
 set nocompatible     " Unset vi compatibility
 syntax on            " Syntax highlighting
 set showcmd          " Echo pending commands to the bottome of the screen
+set showmode
 set autochdir        " Directories open relative to buffer
 set showmatch        " Highlighting matching delimiters
 if has('gui_running')
@@ -21,7 +22,7 @@ set encoding=utf-8   " Unicode
 execute pathogen#infect()
 filetype plugin indent on
 
-let $PATH .= ':' . expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin')
+let $PATH =  expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin') . ':' . $PATH
 
 """ 4-space autotabs
 set smartindent
@@ -31,7 +32,9 @@ set expandtab
 
 """ Statusline configuration
 set laststatus=2       " Turn it on
-let g:airline_powerline_fonts = 1
+if has('gui_running')
+    let g:airline_powerline_fonts = 1
+endif
 
 """ Backups
 set backup
@@ -40,7 +43,8 @@ set backupdir=~/.vim/backup
 """ Plugin configuration
 "" Unite
 let g:unite_source_history_yank_enable = 1
-nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async<CR>
+let g:unite_source_rec_async_command= 'ag -p ~/.agignore --nocolor --nogroup -g ""'
+nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async:!<CR>
 nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
 nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
@@ -132,7 +136,6 @@ inoremap <C-j> <CR>
 " F2 to toggle paste mode
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
-set showmode
 
 "" F3 highlights trailing whitespace
 nnoremap <F3> :match ErrorMsg '\s\+$'<CR>
@@ -152,6 +155,13 @@ nnoremap <F9> :TagbarToggle<CR>
 " F10 toggles spelling
 nnoremap <F10> :setlocal spell!<CR>
 inoremap <F10> <C-o>:setlocal spell!<CR>
+
+" Meta-D to go to beginning of line in insert mode
+if (system("uname -s") =~ "Darwin")
+    inoremap ∂ <C-o>0
+else
+    inoremap <M-d> <C-o>0
+endif
 
 """ Misc hacks.
 "" Preserve selection after indenting
@@ -194,3 +204,7 @@ function! AlignLine(line, sep, maxpos, extra)
   let spaces = repeat(' ', a:maxpos - strlen(m[1]) + a:extra)
   return m[1] . spaces . m[2]
 endfunction
+
+""" Macros
+"" @b draws a box of octothorpes around the text on the line (centred)
+let @b=':centero∂80i#kkjO∂80i#j0r#80A 80|C#jj'
