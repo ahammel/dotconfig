@@ -26,7 +26,7 @@ let $PATH =  expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin') . ':' . $PAT
 
 """ 4-space autotabs
 set smartindent
-set tabstop=8
+set tabstop=4
 set shiftwidth=4
 set expandtab
 
@@ -50,25 +50,17 @@ nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
 nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
 nnoremap <Leader>t :Unite -no-split tag<CR>
 
-"" Neocomplete
-let g:neocomplete#enable_at_startup = 1
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<BS>"
-
-"" Neosnippet
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-
 "" Synatastic
 let g:syntastic_auto_loc_list=0
 let g:syntastic_auto_populate_loc_list=1
-let g:syntastic_haskell_checkers = ['ghc_mod']
+let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
 
 let g:ghcmod_ghc_options = []
 let g:syntastic_haskell_ghc_mod_args = ''
+
+let g:syntastic_haskell_hlint_args = "--hint=$HOME/HLint.hs"
+
+nnoremap <Leader>st :SyntasticToggleMode<CR>
 
 "" Tagbar
 let g:tagbar_type_haskell = {
@@ -120,8 +112,12 @@ autocmd FileType gitcommit setlocal spell
 " ,<Space> for toggling folds
 nnoremap <Leader><Space> za
 
-" ,s inserts type signature
-nnoremap <Leader>s :GhcModTypeInsert<CR>
+"" Haskell commands
+" ,hs inserts type signature
+nnoremap <Leader>hs :GhcModTypeInsert<CR>
+
+" ,hl hlints the current file
+nnoremap <Leader>hl :SyntasticCheck hlint<CR>
 
 " ,T to find the tags file
 nnoremap <Leader>T :set tags=./tags;/<CR>
@@ -204,6 +200,18 @@ function! AlignLine(line, sep, maxpos, extra)
   let spaces = repeat(' ', a:maxpos - strlen(m[1]) + a:extra)
   return m[1] . spaces . m[2]
 endfunction
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 """ Macros
 "" @b draws a box of octothorpes around the text on the line (centred)

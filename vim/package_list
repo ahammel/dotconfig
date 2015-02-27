@@ -8,14 +8,10 @@ vim-repeat           https://github.com/tpope/vim-repeat
 vimproc              https://github.com/Shougo/vimproc.vim              make
 unite                https://github.com/Shougo/unite.vim
 unite-tag            https://github.com/tsukkee/unite-tag
-neocomplete          https://github.com/Shougo/neocomplete.vim
-neosnippet           https://github.com/Shougo/neosnippet.vim
-snippets             https://github.com/Shougo/neosnippet-snippets
 neomru               https://github.com/Shougo/neomru.vim
-haskell-vim          https://github.com/raichoo/haskell-vim
 syntastic            https://github.com/scrooloose/syntastic
-vim-multiple-cursors https://github.com/terryma/vim-multiple-cursors
 tagbar               https://github.com/vim-scripts/Tagbar
 ag                   https://github.com/rking/ag.vim
 vim-colorschemes     https://github.com/flazz/vim-colorschemes
 airline              https://github.com/bling/vim-airline
+hasksyn              https://github.com/travitch/hasksyn
