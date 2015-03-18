@@ -7,6 +7,8 @@ set autochdir        " Directories open relative to buffer
 set showmatch        " Highlighting matching delimiters
 if has('gui_running')
     set cursorline   " Highlight current line
+else
+    set nocursorline
 endif
 set number           " Line numbers
 let mapleader = ","  " Comma for leader key
@@ -61,6 +63,34 @@ let g:syntastic_haskell_ghc_mod_args = ''
 let g:syntastic_haskell_hlint_args = "--hint=$HOME/HLint.hs"
 
 nnoremap <Leader>st :SyntasticToggleMode<CR>
+
+"" Neocomplete
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case=1
+let g:neocomplete#sources#syntax#min_keyword_length=3
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+" For no inserting <CR> key.
+"return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+"" Neosnippet
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 
 "" Tagbar
 let g:tagbar_type_haskell = {

@@ -9,6 +9,9 @@ vimproc              https://github.com/Shougo/vimproc.vim              make
 unite                https://github.com/Shougo/unite.vim
 unite-tag            https://github.com/tsukkee/unite-tag
 neomru               https://github.com/Shougo/neomru.vim
+neocomplete          https://github.com/Shougo/neocomplete.vim
+neosnippet           https://github.com/Shougo/neosnippet.vim
+snippets             https://github.com/Shougo/neosnippet-snippets
 syntastic            https://github.com/scrooloose/syntastic
 tagbar               https://github.com/vim-scripts/Tagbar
 ag                   https://github.com/rking/ag.vim
