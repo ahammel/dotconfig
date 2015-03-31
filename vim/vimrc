@@ -24,7 +24,7 @@ set encoding=utf-8   " Unicode
 execute pathogen#infect()
 filetype plugin indent on
 
-let $PATH =  expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin') . ':' . $PATH
+let $PATH =  '/usr/local/bin/:' . expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin') . ':' . $PATH
 
 """ 4-space autotabs
 set smartindent
@@ -56,9 +56,7 @@ nnoremap <Leader>t :Unite -no-split tag<CR>
 let g:syntastic_auto_loc_list=0
 let g:syntastic_auto_populate_loc_list=1
 let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
-
-let g:ghcmod_ghc_options = []
-let g:syntastic_haskell_ghc_mod_args = ''
+let g:syntastic_python_checkers = ['python', 'pyflakes']
 
 let g:syntastic_haskell_hlint_args = "--hint=$HOME/HLint.hs"
 
@@ -68,21 +66,6 @@ nnoremap <Leader>st :SyntasticToggleMode<CR>
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case=1
 let g:neocomplete#sources#syntax#min_keyword_length=3
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-" For no inserting <CR> key.
-"return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
 
 "" Neosnippet
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -130,6 +113,7 @@ let g:tagbar_type_haskell = {
 au FileType haskell nnoremap <buffer> <F5> :GhcModType<CR>
 au FileType haskell nnoremap <buffer> <silent> <F6> :GhcModTypeClear<CR>
 au FileType haskell nnoremap <buffer> <silent> <F7> :GhcModInfo<CR>
+au Filetype haskell setlocal omnifunc=necoghc#omnifunc
 
 "" Makefiles
 " Proper tabs
@@ -171,9 +155,6 @@ nnoremap <silent> <F4> mz:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR
 vnoremap <silent> <F4> :s/\s\+$//<CR>:nohl<CR>
 
 " F5 -- F7 taken by Haskell specific functions
-
-" F8 to fix the Macvim fullscreen bug
-nnoremap <F8> :set lines=999<CR>
 
 " F9 toggles the tagbar
 nnoremap <F9> :TagbarToggle<CR>
