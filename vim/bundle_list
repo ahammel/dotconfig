@@ -1,0 +1,22 @@
+vim-eunuch        https://github.com/tpope/vim-eunuch
+vim-commentary    https://github.com/tpope/vim-commentary
+vim-fugitive      https://github.com/tpope/vim-fugitive
+vim-surround      https://github.com/tpope/vim-surround
+vim-unimpaired    https://github.com/tpope/vim-unimpaired
+vim-abolish       https://github.com/tpope/vim-abolish
+vim-repeat        https://github.com/tpope/vim-repeat
+vimproc           https://github.com/Shougo/vimproc.vim              make
+unite             https://github.com/Shougo/unite.vim
+unite-tag         https://github.com/tsukkee/unite-tag
+neomru            https://github.com/Shougo/neomru.vim
+neocomplete       https://github.com/Shougo/neocomplete.vim
+neosnippet        https://github.com/Shougo/neosnippet.vim
+snippets          https://github.com/ahammel/neosnippet-snippets
+syntastic         https://github.com/scrooloose/syntastic
+tagbar            https://github.com/vim-scripts/Tagbar
+ag                https://github.com/rking/ag.vim
+vim-colorschemes  https://github.com/flazz/vim-colorschemes
+hasksyn           https://github.com/travitch/hasksyn
+vim-ansible       https://github.com/chase/vim-ansible-yaml
+vim-slime         https://github.com/jpalardy/vim-slime
+delimMate         https://github.com/Raimondi/delimitMate

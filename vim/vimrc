@@ -1,5 +1,4 @@
-""" Basics
-set nocompatible     " Unset vi compatibility
+""" Basics set nocompatible     " Unset vi compatibility
 syntax on            " Syntax highlighting
 set showcmd          " Echo pending commands to the bottome of the screen
 set showmode
@@ -32,11 +31,18 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
+
+""" List trailing whitespace chars
+set listchars=tab:>>,trail:_
+set list
+
 """ Statusline configuration
 set laststatus=2       " Turn it on
-if has('gui_running')
-    let g:airline_powerline_fonts = 1
-endif
+set statusline=%t      " Tail of filename
+set statusline+=%m     " Modified flag
+set statusline+=%=     " Left/right separator
+set statusline+=%c,    " Cursor column
+set statusline+=%l/%L  " Cursor line / total lines
 
 """ Backups
 set backup
@@ -45,7 +51,10 @@ set backupdir=~/.vim/backup
 """ Plugin configuration
 "" Unite
 let g:unite_source_history_yank_enable = 1
-let g:unite_source_rec_async_command= 'ag -p ~/.agignore --nocolor --nogroup -g ""'
+let g:unite_source_rec_async_command =
+ \ ['ag', '-p', '~/.agignore',
+ \ '--nocolor', '--nogroup', '--hidden',
+ \ '-g', '']
 nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async:!<CR>
 nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
@@ -55,7 +64,7 @@ nnoremap <Leader>t :Unite -no-split tag<CR>
 "" Synatastic
 let g:syntastic_auto_loc_list=0
 let g:syntastic_auto_populate_loc_list=1
-let g:syntastic_haskell_checkers = ['ghc_mod', 'hlint']
+let g:syntastic_haskell_checkers = ['hlint']
 let g:syntastic_python_checkers = ['python', 'pyflakes']
 
 let g:syntastic_haskell_hlint_args = "--hint=$HOME/HLint.hs"
@@ -67,6 +76,9 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case=1
 let g:neocomplete#sources#syntax#min_keyword_length=3
 
+autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+
 "" Neosnippet
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
@@ -74,6 +86,13 @@ imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)"
 \: "\<TAB>"
+
+autocmd FileType neosnippet setlocal noexpandtab
+
+" Vim-slime
+let g:slime_target = "tmux"
+let g:slime_python_ipython = 1
+
 
 "" Tagbar
 let g:tagbar_type_haskell = {
@@ -110,10 +129,13 @@ let g:tagbar_type_haskell = {
 
 """ Filetype-specific settings
 "" Haskell
-au FileType haskell nnoremap <buffer> <F5> :GhcModType<CR>
-au FileType haskell nnoremap <buffer> <silent> <F6> :GhcModTypeClear<CR>
-au FileType haskell nnoremap <buffer> <silent> <F7> :GhcModInfo<CR>
-au Filetype haskell setlocal omnifunc=necoghc#omnifunc
+autocmd FileType haskell nnoremap <buffer> <F5> :GhcModType<CR>
+autocmd FileType haskell nnoremap <buffer> <silent> <F6> :GhcModTypeClear<CR>
+autocmd FileType haskell nnoremap <buffer> <silent> <F7> :GhcModInfo<CR>
+autocmd Filetype haskell setlocal omnifunc=necoghc#omnifunc
+
+"" Yaml
+autocmd Filetype yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
 
 "" Makefiles
 " Proper tabs
@@ -224,6 +246,20 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+" Qargs dumps the quickfix list into args
+command! -nargs=0 -bar Qargs execute 'args ' . QuickfixFilenames()
+function! QuickfixFilenames()
+    " Building a hash ensures we get each buffer only once
+    let buffer_numbers = {}
+    for quickfix_item in getqflist()
+        let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+    endfor
+    return join(values(buffer_numbers))
+endfunction
+
 """ Macros
 "" @b draws a box of octothorpes around the text on the line (centred)
-let @b=':centero∂80i#kkjO∂80i#j0r#80A 80|C#jj'
+let @b=':centero∂74i#kkjO∂74i#j0r#74A 74|C#jj'
+
+"" @h inserts a stub haskell function if the cursor is on a typed hole
+let @h='yE:Errorjj/"v/Relevant bindings includeyGo"'

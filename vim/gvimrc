@@ -1,8 +1,8 @@
 set guioptions=a  " Turns off menu bars or something?
-set guifont=Sauce\ Code\ Powerline:h16
+set guifont=Anonymous\ Pro:h18
 set guicursor=a:blinkon0
 colorscheme gruvbox
-set background=dark
+set background=light
 let g:solarized_italic=0
 
 """ Auto-reload
