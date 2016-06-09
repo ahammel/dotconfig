@@ -86,6 +86,11 @@ alias gco='/usr/local/bin/git checkout '
 alias gdiff='/usr/local/bin/git diff'
 alias gbpurge='git branch --merged | grep -Ev "(\*|master|develop|staging)" | xargs -n 1 git branch -d'
 
+alias such=git
+alias very=git
+alias much=git
+alias wow='git push'
+
 # Prevent ssh weirdness
 alias ssh='SHELL="" /usr/bin/ssh'
 alias scp='SHELL="" /usr/bin/scp'
