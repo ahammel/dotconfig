@@ -3,6 +3,7 @@ syntax on            " Syntax highlighting
 set showcmd          " Echo pending commands to the bottome of the screen
 set showmode
 set autochdir        " Directories open relative to buffer
+autocmd BufEnter * silent! lcd %:p:h
 set showmatch        " Highlighting matching delimiters
 if has('gui_running')
     set cursorline   " Highlight current line
@@ -31,7 +32,6 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
-
 """ List trailing whitespace chars
 set listchars=tab:>>,trail:_
 set list
@@ -56,7 +56,6 @@ let g:unite_source_rec_async_command =
  \ '--nocolor', '--nogroup', '--hidden',
  \ '-g', '']
 nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async:!<CR>
-nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
 nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
 nnoremap <Leader>t :Unite -no-split tag<CR>
@@ -127,13 +126,6 @@ let g:tagbar_type_haskell = {
     \ }
 \ }
 
-""" Filetype-specific settings
-"" Haskell
-autocmd FileType haskell nnoremap <buffer> <F5> :GhcModType<CR>
-autocmd FileType haskell nnoremap <buffer> <silent> <F6> :GhcModTypeClear<CR>
-autocmd FileType haskell nnoremap <buffer> <silent> <F7> :GhcModInfo<CR>
-autocmd Filetype haskell setlocal omnifunc=necoghc#omnifunc
-
 "" Yaml
 autocmd Filetype yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
 
@@ -176,14 +168,13 @@ nnoremap <F3> :match ErrorMsg '\s\+$'<CR>
 nnoremap <silent> <F4> mz:let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>`z
 vnoremap <silent> <F4> :s/\s\+$//<CR>:nohl<CR>
 
-" F5 -- F7 taken by Haskell specific functions
+" F5 toggles spelling
+nnoremap <F5> :setlocal spell!<CR>
+inoremap <F5> <C-o>:setlocal spell!<CR>
 
 " F9 toggles the tagbar
 nnoremap <F9> :TagbarToggle<CR>
 
-" F10 toggles spelling
-nnoremap <F10> :setlocal spell!<CR>
-inoremap <F10> <C-o>:setlocal spell!<CR>
 
 " Meta-D to go to beginning of line in insert mode
 if (system("uname -s") =~ "Darwin")
