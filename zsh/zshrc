@@ -63,7 +63,8 @@ alias tree='tree -C'
 
 # Convenience
 alias e=vim
-alias ll='ls -l'
+alias ls='gls --color'
+alias ll='gls -l --color'
 
 # Climb file trees
 alias ..='echo "cd .." && cd ..'
@@ -83,3 +84,12 @@ alias gc='/usr/local/bin/git commit'
 alias gd='/usr/local/bin/git diff'
 alias gco='/usr/local/bin/git checkout '
 alias gdiff='/usr/local/bin/git diff'
+alias gbpurge='git branch --merged | grep -Ev "(\*|master|develop|staging)" | xargs -n 1 git branch -d'
+
+# Prevent ssh weirdness
+alias ssh='SHELL="" /usr/bin/ssh'
+alias scp='SHELL="" /usr/bin/scp'
+alias ansible='SHELL="" /usr/local/bin/ansible'
+alias ansible-playbook='SHELL="" /usr/local/bin/ansible-playbook'
+
+
