@@ -65,32 +65,31 @@ let g:syntastic_auto_loc_list=0
 let g:syntastic_auto_populate_loc_list=1
 let g:syntastic_haskell_checkers = ['hlint']
 let g:syntastic_python_checkers = ['python', 'pyflakes']
+let g:syntastic_java_checkers = ['']
+let g:syntastic_check_on_open = 0
 
 let g:syntastic_haskell_hlint_args = "--hint=$HOME/HLint.hs"
 
 nnoremap <Leader>st :SyntasticToggleMode<CR>
 
-"" Neocomplete
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case=1
-let g:neocomplete#sources#syntax#min_keyword_length=3
-
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-
 "" Neosnippet
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 autocmd FileType neosnippet setlocal noexpandtab
 
 " Vim-slime
 let g:slime_target = "tmux"
 let g:slime_python_ipython = 1
+
+"" Easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 
 "" Tagbar
@@ -126,8 +125,27 @@ let g:tagbar_type_haskell = {
     \ }
 \ }
 
+"" Markdown
+" 2-space tabs
+autocmd Filetype markdown setlocal tabstop=2 softtabstop=2 shiftwidth=2
+" Turn on the spellchecker
+autocmd Filetype markdown setlocal spell
+
+"" SQL
+" 2-space tabs
+autocmd Filetype sql setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
 "" Yaml
 autocmd Filetype yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
+"" JS
+autocmd Filetype javascript setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
+"" JSON
+autocmd Filetype json setlocal tabstop=2 softtabstop=2 shiftwidth=2
+
+"" html
+autocmd Filetype html setlocal tabstop=2 softtabstop=2 shiftwidth=2
 
 "" Makefiles
 " Proper tabs
@@ -154,6 +172,19 @@ nnoremap <Leader>T :set tags=./tags;/<CR>
 nnoremap <C-h> :nohl<CR>
 inoremap <C-h> <C-o>:nohl<CR>
 
+"" Clojure
+let g:clojure_syntax_keywords = {
+    \ 'clojureMacro': [
+    \    "defsc",
+    \    "defcard",
+    \],
+    \ 'clojureFunc': ["string/join", "string/replace"]
+    \ }
+
+" Default
+let g:clojure_fuzzy_indent = 1
+let g:clojure_fuzzy_indent_patterns = ['^with', '^def', '^let', '^dom\/']
+
 " C-j inserts newline (thanks, brief Emacs experiment!)
 inoremap <C-j> <CR>
 
@@ -171,6 +202,10 @@ vnoremap <silent> <F4> :s/\s\+$//<CR>:nohl<CR>
 " F5 toggles spelling
 nnoremap <F5> :setlocal spell!<CR>
 inoremap <F5> <C-o>:setlocal spell!<CR>
+
+" F6 One paragraph per sentence in the current line.
+nnoremap <F6> :s/\v\. +/.\r/g<CR>:nohl<CR>
+inoremap <F6> <C-o>:s/\v\. +/.\r/g<CR>:nohl<CR>
 
 " F9 toggles the tagbar
 nnoremap <F9> :TagbarToggle<CR>
@@ -197,6 +232,9 @@ autocmd! BufWritePost vimrc source $MYVIMRC
 
 "" :w!! sudo writes
 cmap w!! w !sudo tee > /dev/null %
+
+"" :scratch opens a scratch file with the given extension
+command! -nargs=1 Scratch execute "echo" string("~/scratch/scracth. " . <q-args>)
 
 "" Regex-based alignment (thanks again, Emacs!)
 command! -nargs=? -range Align <line1>,<line2>call AlignSection('<args>')

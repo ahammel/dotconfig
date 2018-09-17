@@ -14,14 +14,14 @@ SAVEHIST=5000
 setopt autocd nomatch
 unsetopt beep notify
 setopt appendhistory
-bindkey -v
+bindkey -e
 # End of lines configured by zsh-newuser-install
 
 source ~/.profile
 export ZSH=$HOME/.oh-my-zsh
 
 autoload -U colors && colors
-export PATH=~/.cabal/bin:~/bin:$PATH
+export PATH=/Users/alex/bin:/usr/local/bin:$PATH
 export EDITOR=vim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 export SHELL=zsh
@@ -33,11 +33,19 @@ stty ixoff -ixon
 git_prompt() {
     git symbolic-ref HEAD  2>/dev/null | cut -d'/' -f3
 }
+
+aws_profile() {
+    echo "$AWS_PROFILE"
+}
 setopt prompt_subst
 
 PROMPT='%
-%{%F{white}%}┌─────%{%F{green}%}[\$alex:%c] %{%F{cyan}%}($(git_prompt))%{%f%}
-%{%F{white}%}└─╼%{%f%} '
+%{%F{white}%}%{%F{green}%}[\$alex:%c] %{%F{cyan}%}($(git_prompt))%{%f%}
+%{%F{white}%}╾─○%{%f%} '
+
+AWS_PROMPT='%
+%{%F{white}%}%{%F{red}%}[\$alex:%c] %{%F{green}%}($(aws_profile))%{%f%}
+%{%F{white}%}╾─○%{%f%} '
 
 # coloured man pages, courtesy the Arch wiki
 man() {
@@ -52,6 +60,23 @@ man() {
         man "$@"
 }
 
+## ssh to an arbitrary host in the ansible inventory
+ash () {
+    target_hosts="$1"
+    shift || return 1
+    # TODO: argument for inventory file
+
+    hosts=$(ansible "$target_hosts" --list-hosts)
+    [[ $? != 0 ]] && return 1
+
+    url=$(echo "$hosts" | tail -n +2 | gshuf | head -n 1 | tr -d " ")
+    [[ $? != 0 ]] && return 1
+    [[ -z "$url" ]] && echo "No hosts found for target '$target_hosts'" && return 1
+
+    echo ssh "$url" "$@"
+    ssh "$url" "$@"
+}
+
 ## Aliases
 # Reload this file
 alias reload='source ~/.zshrc'
@@ -60,6 +85,9 @@ alias reload='source ~/.zshrc'
 alias grep='grep --color'
 alias less='less -G'
 alias tree='tree -C'
+
+# bin
+alias rg="$HOME/bin/ripgrep/rg -g'!*.min.js'"
 
 # Convenience
 alias e=vim
@@ -97,4 +125,30 @@ alias scp='SHELL="" /usr/bin/scp'
 alias ansible='SHELL="" /usr/local/bin/ansible'
 alias ansible-playbook='SHELL="" /usr/local/bin/ansible-playbook'
 
+PATH="/Users/alex/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/alex/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/alex/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/alex/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/alex/perl5"; export PERL_MM_OPT;
 
+# Java
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+alias setJdk8='export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)'
+alias setJdk9='export JAVA_HOME=$(/usr/libexec/java_home -v 1.9)'
+
+# Chrome
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+alias chrome-repl="chrome --headless --disable-gpu --repl --crash-dumps-dir=./tmp"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/alex/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/alex/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/alex/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/alex/google-cloud-sdk/completion.zsh.inc'; fi
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
