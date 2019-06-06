@@ -5,7 +5,6 @@ syntax on           " Syntax highlighting
 set showcmd         " Echo pending commands to the bottome of the screen
 set autochdir       " Directories open relative to buffer
 set showmatch       " Highlighting matching delimiters
-set cursorline      " Highlight current line
 set number          " Line numbers
 let mapleader = "," " Comma for leader key
 set hlsearch        " Search highlighting
@@ -49,37 +48,14 @@ nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
 nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
 
-"" Neocomplete
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <BS>: close popup and delete backword char.
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-"" Synatastic
-let g:syntastic_auto_loc_list=0
-let g:syntastic_haskell_checkers = ['ghc_mod', 'hdevtools']
-
 """ Filetype-specific settings
-"" Haskell
-au FileType haskell nnoremap <buffer> <F10> :GhcModType<CR>
-au FileType haskell nnoremap <buffer> <silent> <F11> :GhcModTypeClear<CR>
-au FileType haskell nnoremap <buffer> <silent> <F12> :GhcModInfo<CR>
-" insert type signature
-nnoremap <Leader>s :.!typeOf %<CR>
-
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
+
+"" YAML
+" 2 space tabs
+autocmd FileType yaml setlocal shiftwidth=2
 
 """ Keybindings
 " C-h clears highlighting
