@@ -1,9 +1,9 @@
-""" Basics
+"" Basics
 set nocompatible    " Unset vi compatibility
 set background=dark " Dark background
 syntax on           " Syntax highlighting
 set showcmd         " Echo pending commands to the bottome of the screen
-set autochdir       " Directories open relative to buffer
+set noautochdir     " Directories open relative to buffer
 set showmatch       " Highlighting matching delimiters
 set number          " Line numbers
 let mapleader = "," " Comma for leader key
@@ -24,7 +24,7 @@ let $PATH .= ':' . expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin')
 
 """ 4-space autotabs
 set smartindent
-set tabstop=8
+set tabstop=4
 set shiftwidth=4
 set expandtab
 
@@ -40,13 +40,56 @@ set statusline+=%l/%L  " Cursor line / total lines
 set backup
 set backupdir=~/.vim/backup
 
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+
 """ Plugin configuration
-"" Unite
-let g:unite_source_history_yank_enable = 1
-nnoremap <Leader>p :Unite -no-split -start-insert file_rec/async<CR>
-nnoremap <Leader>y :Unite -no-split -start-insert history/yank<CR>
-nnoremap <Leader>b :Unite -no-split -start-insert buffer<CR>
-nnoremap <Leader>m :Unite -no-split -start-insert file_mru<CR>
+"" Denite
+" User rg for file search
+call denite#custom#var(
+            \'file/rec', 'command', 
+            \['rg', '--files', '--color', 'never'])
+
+" Use rg for grep
+call denite#custom#var('grep', 'command', ['rg'])
+call denite#custom#var('grep', 'default_opts',
+            \ ['-i', '--vimgrep', '--no-heading'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+
+" Mappings
+ autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+  nnoremap <silent><buffer><expr> <CR>
+  \ denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> d
+  \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+  \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> q
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> i
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <Space>
+  \ denite#do_map('toggle_select').'j'
+endfunction
+
+nnoremap <Leader>p :DeniteProjectDir -start-filter file/rec<CR>
+nnoremap <Leader>b :Denite buffer<CR>
+nnoremap <Leader>m :Denite -start-filter file_mru<CR>
+nnoremap <Leader>g :DeniteProjectDir -start-filter grep:::!<CR>
+vnoremap <Leader>g y:DeniteProjectDir grep:::<C-R>"<CR>
 
 """ Filetype-specific settings
 "" Makefiles
@@ -56,6 +99,7 @@ autocmd FileType make setlocal noexpandtab
 "" YAML
 " 2 space tabs
 autocmd FileType yaml setlocal shiftwidth=2
+
 
 """ Keybindings
 " C-h clears highlighting
@@ -84,8 +128,7 @@ nnoremap <F6> vip:s/\.  \+/.\r/g<CR>vip:s/\([^\.]\)\n/\1 /g<CR>
 autocmd! BufNewFile * silent! 0r ~/.vim/skel/tmpl.%:e
 
 "" Autoreload vimrc file
-"  Note that the arg is 'vimrc', not '.vimrc' because of symlinking.
-autocmd! BufWritePost vimrc source $MYVIMRC
+autocmd! BufWritePost ~/.vimrc source ~/.vimrc
 
 "" :w!! sudo writes
 cmap w!! w !sudo tee > /dev/null %

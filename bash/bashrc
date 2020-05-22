@@ -1,6 +1,10 @@
 shopt -s autocd
 
-export PATH=$PATH:$HOME/bin:$HOME/.gem/ruby/2.0.0/bin:$HOME/.cabal/bin
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.0.0/bin:$PATH"
+export PATH="$HOME/.cabal/bin:/usr/local/opt/terraform@0.11/bin:$PATH"
+export PATH="$HOME/.jenv/bin:$PATH"
 export EDITOR=vim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 
@@ -40,6 +44,9 @@ alias ......='echo "cd ../../../../.." && cd ../../../../..'
 alias .......='echo "cd ../../../../../.." && cd ../../../../../..'
 alias ........='echo "cd ../../../../../../.." && cd ../../../../../../..'
 
+# AWS
+alias awsprd='aws --profile=dev-backend'
+
 # Git
 alias gst='git status '
 alias ga='git add '
@@ -48,3 +55,40 @@ alias gc='git commit'
 alias gd='git diff'
 alias gco='git checkout '
 alias gdiff='git diff'
+
+# Ruby
+alias ber='bundle exec rake'
+
+# 🐳
+function dcu() { docker-compose up $@; }
+function dcuf() { docker-compose up --build --force-recreate $@; }
+alias stopall='docker rm -f $(docker ps -aq)'
+
+# vpn
+alias vpn='tds vpn-up'
+alias novpn='tds vpn-down'
+alias fuckingvpn='tds vpn-down'
+
+# terraform
+alias tf=terraform
+
+# who is listening on my port?
+listening() {
+    if [ $# -eq 0 ]; then
+        sudo lsof -iTCP -sTCP:LISTEN -n -P
+    elif [ $# -eq 1 ]; then
+        sudo lsof -iTCP -sTCP:LISTEN -n -P | grep -i --color $1
+    else
+        echo "Usage: listening [pattern]"
+    fi
+}
+
+# Coreutils aliases
+alias sha256sum=/usr/local/bin/gsha256sum
+
+eval "$(rbenv init -)"
+eval "$(jenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

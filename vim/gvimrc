@@ -1,7 +1,7 @@
 set guioptions=a  " Turns off menu bars or something?
-set guifont=Hack:h16
+set guifont=Hack:h20
 set guicursor=a:blinkon0
-colorscheme solarized
+colorscheme gruvbox
 set bg=light
 
 """ Auto-reload
