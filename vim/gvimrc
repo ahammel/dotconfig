@@ -1,5 +1,5 @@
 set guioptions=a  " Turns off menu bars or something?
-set guifont=Hack:h20
+set guifont=FiraFlott:h20
 set guicursor=a:blinkon0
 colorscheme gruvbox
 set bg=light
