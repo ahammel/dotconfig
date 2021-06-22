@@ -6,6 +6,8 @@ export PATH="$HOME/.jenv/bin:$PATH"
 export EDITOR=vim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 
+bindkey -e # emacs keybinds
+
 # coloured man pages, courtesy the Arch wiki
 man() {
     env \

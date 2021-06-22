@@ -4,8 +4,4 @@ vim-fugitive         https://github.com/tpope/vim-fugitive
 vim-surround         https://github.com/tpope/vim-surround
 vim-unimpaired       https://github.com/tpope/vim-unimpaired
 vim-colorschemes     https://github.com/flazz/vim-colorschemes
-nvim-yarp            https://github.com/roxma/nvim-yarp
-vim-hug-neovim-rpc   https://github.com/roxma/vim-hug-neovim-rpc
-denite               https://github.com/Shougo/denite.nvim
-neomru               https://github.com/Shougo/neomru.vim
-vim-terraform        https://github.com/hashivim/vim-terraform
+vim-rainbow          https://github.com/frazrepo/vim-rainbow

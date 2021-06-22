@@ -52,6 +52,9 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+" Buffer management
+nnoremap <leader>b :ls<cr>:b<space>
+
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
@@ -60,6 +63,11 @@ autocmd FileType make setlocal noexpandtab
 " 2 space tabs
 autocmd FileType yaml setlocal shiftwidth=2
 
+"" Clojure
+" 2 space tabs
+autocmd FileType clojure setlocal shiftwidth=2
+" Rainbow parens
+autocmd FileType clojure call rainbow#load()
 
 """ Keybindings
 " C-h clears highlighting
