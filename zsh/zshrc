@@ -1,11 +1,6 @@
-shopt -s autocd
-
-export PATH="/usr/local/opt/ruby/bin:$PATH"
+setopt autocd
 export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.gem/ruby/2.0.0/bin:$PATH"
-export PATH="$HOME/.cabal/bin:/usr/local/opt/terraform@0.11/bin:$PATH"
-export PATH="$HOME/.jenv/bin:$PATH"
-export EDITOR=vim
+export EDITOR=nvim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 
 # coloured man pages, courtesy the Arch wiki
@@ -23,7 +18,7 @@ man() {
 
 ## Aliases
 # Reload this file
-alias reload='source ~/.bashrc'
+alias reload='source ~/.zshrc'
 
 # Colorize things
 alias grep='grep --color'
@@ -32,7 +27,8 @@ alias tree='tree -C'
 alias ls='ls -G'
 
 # Convenience
-alias e=vim
+alias e=nvim
+alias view='nvim -R'
 alias ll='ls -l'
 
 # Climb file trees
@@ -44,9 +40,6 @@ alias ......='echo "cd ../../../../.." && cd ../../../../..'
 alias .......='echo "cd ../../../../../.." && cd ../../../../../..'
 alias ........='echo "cd ../../../../../../.." && cd ../../../../../../..'
 
-# AWS
-alias awsprd='aws --profile=dev-backend'
-
 # Git
 alias gst='git status '
 alias ga='git add '
@@ -56,21 +49,10 @@ alias gd='git diff'
 alias gco='git checkout '
 alias gdiff='git diff'
 
-# Ruby
-alias ber='bundle exec rake'
-
 # 🐳
 function dcu() { docker-compose up $@; }
 function dcuf() { docker-compose up --build --force-recreate $@; }
 alias stopall='docker rm -f $(docker ps -aq)'
-
-# vpn
-alias vpn='tds vpn-up'
-alias novpn='tds vpn-down'
-alias fuckingvpn='tds vpn-down'
-
-# terraform
-alias tf=terraform
 
 # who is listening on my port?
 listening() {
@@ -85,10 +67,3 @@ listening() {
 
 # Coreutils aliases
 alias sha256sum=/usr/local/bin/gsha256sum
-
-eval "$(rbenv init -)"
-eval "$(jenv init -)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

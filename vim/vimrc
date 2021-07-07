@@ -16,12 +16,6 @@ set foldcolumn=3    " Display fold level
 set spelllang=en_ca " Canadian spelling
 set encoding=utf-8  " Unicode
 
-""" Pathogen
-execute pathogen#infect()
-filetype plugin indent on
-
-let $PATH .= ':' . expand('$HOME/.cabal/bin') . ':' . expand('$HOME/bin')
-
 """ 4-space autotabs
 set smartindent
 set tabstop=4
@@ -52,46 +46,28 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
-""" Plugin configuration
-"" Denite
-" User rg for file search
-call denite#custom#var(
-            \'file/rec', 'command', 
-            \['rg', '--files', '--color', 'never'])
+" Plugins
+"" Plugins will be downloaded under the specified directory.
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 
-" Use rg for grep
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts',
-            \ ['-i', '--vimgrep', '--no-heading'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'flazz/vim-colorschemes'
+Plug 'Olical/conjure', {'tag': 'v4.21.0'}
+Plug 'jremmen/vim-ripgrep'
 
-" Mappings
- autocmd FileType denite call s:denite_my_settings()
-function! s:denite_my_settings() abort
-  nnoremap <silent><buffer><expr> <CR>
-  \ denite#do_map('do_action')
-  nnoremap <silent><buffer><expr> d
-  \ denite#do_map('do_action', 'delete')
-  nnoremap <silent><buffer><expr> p
-  \ denite#do_map('do_action', 'preview')
-  nnoremap <silent><buffer><expr> q
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> i
-  \ denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> <Space>
-  \ denite#do_map('toggle_select').'j'
-endfunction
-
-nnoremap <Leader>p :DeniteProjectDir -start-filter file/rec<CR>
-nnoremap <Leader>b :Denite buffer<CR>
-nnoremap <Leader>m :Denite -start-filter file_mru<CR>
-nnoremap <Leader>g :DeniteProjectDir -start-filter grep:::!<CR>
-vnoremap <Leader>g y:DeniteProjectDir grep:::<C-R>"<CR>
+"" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
 
 """ Filetype-specific settings
+"" Cljoure
+" 2 space tabs
+autocmd FileType clojure setlocal shiftwidth=2
+
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
@@ -100,14 +76,23 @@ autocmd FileType make setlocal noexpandtab
 " 2 space tabs
 autocmd FileType yaml setlocal shiftwidth=2
 
-
 """ Keybindings
+"" Editing
 " C-h clears highlighting
 nnoremap <C-h> :nohl<return>
 
 " C-j inserts newline (thanks, brief Emacs experiment!)
 inoremap <C-j> <CR>
 
+"" Navigation
+" ,b to jump between buffers
+nnoremap <leader>b :ls<CR>:b<space>
+
+" ,rc to jump to this file
+nnoremap <leader>rc :e ~/.vim/vimrc<CR>
+
+
+"" Function keys
 " F2 to toggle paste mode
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
@@ -128,7 +113,7 @@ nnoremap <F6> vip:s/\.  \+/.\r/g<CR>vip:s/\([^\.]\)\n/\1 /g<CR>
 autocmd! BufNewFile * silent! 0r ~/.vim/skel/tmpl.%:e
 
 "" Autoreload vimrc file
-autocmd! BufWritePost ~/.vimrc source ~/.vimrc
+autocmd! BufWritePost ~/.vim/vimrc source ~/.vim/vimrc
 
 "" :w!! sudo writes
 cmap w!! w !sudo tee > /dev/null %
