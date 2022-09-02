@@ -66,6 +66,7 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'ahammel/zprint.vim' " <- actually a symlink to my version
 
 "" List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -97,6 +98,7 @@ nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fj <cmd>lua require('telescope.builtin').jumplist()<cr>
 nnoremap <leader>fk <cmd>lua require('telescope.builtin').keymaps()<cr>
 nnoremap <leader>fp <cmd>lua require('telescope.builtin').registers()<cr>
+nnoremap <leader>fs <cmd>lua require('telescope.builtin').spell_suggest()<cr>
 
 nnoremap <leader>cm <cmd>lua require('telescope.builtin').keymaps()<cr>
 
@@ -112,19 +114,31 @@ augroup rainbow_lisp
   autocmd FileType lisp,clojure,scheme RainbowParentheses
 augroup END
 
+"" Zprint
+let g:zprint#options_map = '{:search-config? true}'
+
+"" Codi
+let g:codi#interpreters = {
+      \ 'python': {
+          \ 'bin': 'python3',
+          \ 'prompt': '^\(>>>\|\.\.\.\) ',
+          \ },
+      \ }
+
 """ Filetype-specific settings
 "" Cljoure
 " 2 space tabs
 autocmd FileType clojure setlocal shiftwidth=2
-
-"
 autocmd FileType clojure nnoremap <buffer> <localleader>cc :ConjureConnect<space>
+
+"" Python
+" Codi keybinds
+autocmd FileType python nnoremap <buffer> <localleader>cc :Codi!!<cr>
+autocmd FileType python nnoremap <buffer> <localleader>b :w<cr>:!black -l 79 %<cr>
 
 "" Makefiles
 " Proper tabs
 autocmd FileType make setlocal noexpandtab
-
-
 
 "" YAML
 " 2 space tabs

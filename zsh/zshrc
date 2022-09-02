@@ -1,7 +1,16 @@
+autoload -Uz promptinit
+promptinit
+
 setopt autocd
+bindkey -e # emacs keybinds
+
 export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.jenv/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
 export EDITOR=nvim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
+
+PROMPT="%n@%m:%~ $ "
 
 # coloured man pages, courtesy the Arch wiki
 man() {
@@ -49,6 +58,9 @@ alias gd='git diff'
 alias gco='git checkout '
 alias gdiff='git diff'
 
+# Datestamp
+alias datestamp="TZ=utc date +'%Y%m%d%H%M00'"
+
 # 🐳
 function dcu() { docker-compose up $@; }
 function dcuf() { docker-compose up --build --force-recreate $@; }
@@ -67,3 +79,30 @@ listening() {
 
 # Coreutils aliases
 alias sha256sum=/usr/local/bin/gsha256sum
+
+function mmdc() {
+    npx -p @mermaid-js/mermaid-cli mmdc $@
+}
+
+# Codi
+# Usage: codi [filetype] [filename]
+codi() {
+  local syntax="${1:-python}"
+  shift
+  nvim -c \
+    "let g:startify_disable_at_vimenter = 1 |\
+    set bt=nofile ls=0 noru nonu nornu |\
+    hi ColorColumn ctermbg=NONE |\
+    hi VertSplit ctermbg=NONE |\
+    hi NonText ctermfg=0 |\
+    Codi $syntax" "$@"
+}
+
+# Slurp dangerous secrets into the env, WCGW?
+export DO_API_TOKEN="$(<~/secrets/do_api_token)"
+export GH_API_TOKEN="$(<~/secrets/gh_api_token)"
+
+# Goddamn cows
+export ANSIBLE_NOCOWS=1
+
+eval "$(jenv init -)"
