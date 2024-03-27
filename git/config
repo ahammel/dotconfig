@@ -1,9 +1,17 @@
+[user]
+        email = alex.hammel@epicgames.com
+        name = Alex Hammel
 [alias]
 	br = branch
 	co = checkout
 	st = status
-	hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short
 	please = push --force-with-lease
+	hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short
+    slack = log --pretty=format:'%s - @%al'
+    gud = fetch origin master:master
+    cleanup = "!git branch -r --merged master | grep  -v '\\*\\|master\\|develop' | xargs -n 1 -r git branch -d"
 
 [pull]
 	rebase = true
+[core]
+	excludesFile = ~/.gitignore

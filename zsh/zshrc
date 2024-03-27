@@ -4,9 +4,10 @@ promptinit
 setopt autocd
 bindkey -e # emacs keybinds
 
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+export PATH="$HOME/bin/codeql:$PATH"
 export PATH="$HOME/bin:$PATH"
-export PATH="$HOME/.jenv/bin:$PATH"
-export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 export EDITOR=nvim
 export LC_ALL="en_US.utf-8"            # Fixes an encoding problem in tmux
 
@@ -39,6 +40,7 @@ alias ls='ls -G'
 alias e=nvim
 alias view='nvim -R'
 alias ll='ls -l'
+alias ktl=kubectl
 
 # Climb file trees
 alias ..='echo "cd .." && cd ..'
@@ -48,6 +50,12 @@ alias .....='echo "cd ../../../.." && cd ../../../..'
 alias ......='echo "cd ../../../../.." && cd ../../../../..'
 alias .......='echo "cd ../../../../../.." && cd ../../../../../..'
 alias ........='echo "cd ../../../../../../.." && cd ../../../../../../..'
+
+# Edit all GitHub actions files
+alias egha='nvim .github/workflows/*'
+
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
 
 # Git
 alias gst='git status '
@@ -61,11 +69,24 @@ alias gdiff='git diff'
 # Datestamp
 alias datestamp="TZ=utc date +'%Y%m%d%H%M00'"
 
+# Java stuffs
+export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
+export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+export JAVA_21_HOME=$(/usr/libexec/java_home -v21)
+
+alias java8='export JAVA_HOME=$JAVA_8_HOME'
+alias java11='export JAVA_HOME=$JAVA_11_HOME'
+alias java21='export JAVA_HOME=$JAVA_21_HOME'
+
+## default to Java 11
+java21
+
 # 🐳
 function dcu() { docker-compose up $@; }
 function dcuf() { docker-compose up --build --force-recreate $@; }
 alias stopall='docker rm -f $(docker ps -aq)'
 
+## Port magic
 # who is listening on my port?
 listening() {
     if [ $# -eq 0 ]; then
@@ -76,33 +97,56 @@ listening() {
         echo "Usage: listening [pattern]"
     fi
 }
+# find a free port
+free-port() {
+   python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()'
+}
 
-# Coreutils aliases
+## Coreutils aliases
 alias sha256sum=/usr/local/bin/gsha256sum
 
+
+## Misc
 function mmdc() {
     npx -p @mermaid-js/mermaid-cli mmdc $@
 }
 
-# Codi
-# Usage: codi [filetype] [filename]
-codi() {
-  local syntax="${1:-python}"
-  shift
-  nvim -c \
-    "let g:startify_disable_at_vimenter = 1 |\
-    set bt=nofile ls=0 noru nonu nornu |\
-    hi ColorColumn ctermbg=NONE |\
-    hi VertSplit ctermbg=NONE |\
-    hi NonText ctermfg=0 |\
-    Codi $syntax" "$@"
+alias g=./gradlew
+alias tf=terraform
+
+function livetail () {
+    tsh ssh ${1} 'tail -f /mnt/tmp/logs/account-service/access.log'
 }
 
-# Slurp dangerous secrets into the env, WCGW?
-export DO_API_TOKEN="$(<~/secrets/do_api_token)"
-export GH_API_TOKEN="$(<~/secrets/gh_api_token)"
+# make a postgres
+function postgres-up () {
+    docker run \
+        --name myPostgresDb \
+        -p 5455:5432 \
+        -e POSTGRES_USER=postgresUser \
+        -e POSTGRES_PASSWORD=postgresPW \
+        -e POSTGRES_DB=postgresDB \
+        postgres
+}
+
+# Dougie's deploy message script
+export GIT_ACCOUNT_SERVICE_DIRECTORY=~/repos/account-service
+alias deploy-message='make -C ~/repos/tools/python/account-service-deploy-message/ message'
+alias sideband-message='make -C ~/repos/tools/python/account-service-deploy-message/ sideband-message'
 
 # Goddamn cows
 export ANSIBLE_NOCOWS=1
 
-eval "$(jenv init -)"
+## Slurp secrets into the environment, WCGW?
+export EPIC_BUILD_CREDENTIALS_ARTIFACTS_USERNAME="alex.hammel"
+export EPIC_BUILD_CREDENTIALS_ARTIFACTS_PASSWORD="$(<~/secrets/artifacts-password)"
+echo "systemProp.gradle.wrapperUser=${EPIC_BUILD_CREDENTIALS_ARTIFACTS_USERNAME}" > ~/.gradle/gradle.properties
+echo "systemProp.gradle.wrapperPassword=${EPIC_BUILD_CREDENTIALS_ARTIFACTS_PASSWORD}" >> ~/.gradle/gradle.properties
+echo "systemProp.artifacts.username=${EPIC_BUILD_CREDENTIALS_ARTIFACTS_USERNAME}" > ~/.gradle/gradle.properties
+echo "systemProp.artifacts.password=${EPIC_BUILD_CREDENTIALS_ARTIFACTS_PASSWORD}" >> ~/.gradle/gradle.properties
+export NPM_TOKEN="$(<~/secrets/npm-token)"
+source ~/secrets/mongo_jump_commands
+export TEAM_CITY_ACCESS_TOKEN="$(<~/secrets/teamcity_token)"
+
+# Vault stuff
+export VAULT_ADDR="$(<~/secrets/vault_addr)"
